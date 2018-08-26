@@ -6,6 +6,7 @@
  var placeId = 0
  var leader = false
  var inParty = false
+ var request = ""
  var gameCache = {
     606849621: {
         hasIcon: true,
@@ -41,15 +42,19 @@
          }
          isPlaying = false
          for (var process of resultList) {
-             if (process.command.toLowerCase().includes("roblox")) {
-                console.log( 'Found an instance of Roblox running' );[]
+             if (process.command.toLowerCase().includes("roblox") & !process.command.toLowerCase().includes("studio")) {
+                console.log( 'Found an instance of Roblox running' );
                 for (var arg of process.arguments) {
+                    console.log(arg)
                     if (arg.startsWith("https://assetgame.roblox.com")) {
                         console.log("Found the arguments")
                         isPlaying = true
                         placeId = new URL(arg).searchParams.get("placeId")
                         leader = new URL(arg).searchParams.get("isPartyLeader")
                         inParty = new URL(arg).searchParams.get("isPlayTogetherGame")
+                        request = new URL(arg).searchParams.get("request")
+                        console.log(request)
+                        console.log(request)
                         if (!gameCache[new Number(placeId)]) {
                             snek.get(`https://api.roblox.com/marketplace/productinfo?assetId=${placeId}`).then(r => gameCache[new Number(placeId)] = {hasIcon: false, name: r.body.Name});
                             console.log(gameCache)
@@ -81,8 +86,12 @@ function thing() {
     if (gameCache[new Number(placeId)].hasIcon) {
         icon = placeId
     }
+    var vipStatus = ``
+    if (request == "RequestPrivateGame") {
+        vipStatus = " (VIP Server)"
+    }
     rpc.setActivity({
-        details: gameCache[new Number(placeId)].name,
+        details: gameCache[new Number(placeId)].name + vipStatus,
         state: partyStatus,
         largeImageKey: icon,
         largeImageText: `http://roblox.com/games/${placeId}`,
