@@ -1,0 +1,18 @@
+{
+  "name": "rblxrp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "theLMGN",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "discord-rpc": "^3.0.0",
+    "electron": "^2.0.8",
+    "node-ps": "0.0.2",
+    "ps-node": "^0.1.6",
+    "snekfetch": "^4.0.4"
+  }
+}
