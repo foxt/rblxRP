@@ -31,6 +31,10 @@
     189707: {
         hasIcon: true,
         name: "Natural Disaster Survival"
+    },
+    26769281: {
+        hasIcon: true,
+        name: "Arsenal"
     }
  }
  var loggedIn = false
