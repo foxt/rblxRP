@@ -1,6 +1,7 @@
  var ps = require('ps-node');
  var DiscordRPC = require("discord-rpc")
  var snek = require("snekfetch")
+ if (!URL) {URL = require("url")}
  var rpc = new DiscordRPC.Client({ transport: 'ipc' });
  var isPlaying = false
  var placeId = 0
