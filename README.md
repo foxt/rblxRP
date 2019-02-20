@@ -7,8 +7,7 @@ You can show what game you're playing to the world (of discord).
 
 It uses NodeJS. You'll need that to run it.
 
-# IMPORTANT
-Download the **latest** version from https://nodejs.org/en/, it'll say *x.x.x Current*
+# IMPORTANT Download the *latest* version from https://nodejs.org/en/, the one you want is on the right, where it says current.
 
 I've only tested it on macOS. It'll probably still work on Windows though.
 
