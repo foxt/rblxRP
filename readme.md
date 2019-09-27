@@ -19,7 +19,7 @@ Adds Discord rich presence for Roblox.
 1. Download the latest `rblxrp-macos` from [the releases page](https://github.com/theLMGN/rblxRP/releases)
 2. Open `Terminal.app` (it's in `/Applications/Utilities/`)
 3. Drag `rblxrp-macos` into the Terminal and hit enter
-  a. If you get a `permission denied` error, try typing `chmod +x ` (with the space on the end) then dragging the file in again, press enter, and repeat step 3 again.
+  1. If you get a `permission denied` error, try typing `chmod +x ` (with the space on the end) then dragging the file in again, press enter, and repeat step 3 again.
 
 ### Regular Installation
 
