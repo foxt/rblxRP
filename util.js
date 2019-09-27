@@ -11,7 +11,7 @@ module.exports.getProcesses = function(args) {
 
 module.exports.getScriptUrl = function(arguments) {
     for (var argument of arguments) {
-        if (argument.startsWith("https://")) {
+        if (argument.startsWith("https://") && argument.includes("placeId=")) {
             return argument
         }
     }

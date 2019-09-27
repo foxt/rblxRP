@@ -22,13 +22,17 @@ async function procDetect() {
     var scriptUrl = util.getScriptUrl(processes[0].arguments)
     if (scriptUrl == false) {
         console.log("[Detect:Proc] Couldn't find the script URL")
+    } else {
+        console.log("[Detect:Proc] Script URL",scriptUrl)
     }
     if (!scriptUrl.includes("placeId=")) {
         console.log("[Detect:Proc] Malformed script URL")
+        return false
     }
     var split = parseInt(scriptUrl.split("placeId=")[1])
     if (isNaN(split)) {
         console.log("[Detect:Proc] Malformed script URL")
+        return false
     }
     console.log("[Detect:Proc] Found game ID",split)
     return split
