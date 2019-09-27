@@ -12,7 +12,6 @@ var cache = {}
 
 async function procDetect() {
     console.log("[Detect:Proc] Detecting Roblox with process method")
-    var execName = os.platform() == "win32" ? "RobloxPlayerBeta" : "RobloxPlayer"
     var processes = await util.getProcesses({
         command: "RobloxPlayer"
     })
