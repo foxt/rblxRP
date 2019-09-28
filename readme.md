@@ -3,7 +3,7 @@ Adds Discord rich presence for Roblox.
 
 [Join my Discord server](https://discord.gg/4qzqg3k)
 
-![preview](https://i.imgur.com/T3hEpBi.png)
+![preview](https://i.imgur.com/T3hEpBi.png) ![menubar](http://lmgn.uk/gId.png)
 
 ## Instructions
 
