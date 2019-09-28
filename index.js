@@ -1,14 +1,49 @@
 const fetch = require("node-fetch");
+const {app, BrowserWindow,Notification,Menu, Tray} = require('electron')
 const RPC = require("discord-rpc");
 const util = require("./util")
 const os = require("os")
+const fs = require("fs")
 
 const clientId = '626092891667824688';
-const defaultIconKey = "logo_shiny" // logo_old, logo_red, logo_shiny
+var defaultIconKey = "logo_shiny" // logo_old, logo_red, logo_shiny
 
 const rpc = new RPC.Client({ transport: 'ipc' });
+var tray,contextMenu
 
 var cache = {}
+
+async function exit() {
+    try { await rpc.clearActivity() } catch(e) {}
+    process.kill(process.pid)
+}
+
+async function menu(item) {
+    item.checked = true
+    defaultIconKey = item.id
+    for (var i in cache) {
+        if (cache[i].iconkey == "logo_shiny" ||cache[i].iconkey == "logo_red" ||cache[i].iconkey == "logo_old") {
+            cache[i].iconkey = defaultIconKey
+        }
+    }
+    lastPresense = false // force presense update
+}
+
+function getVersion() {
+    if (fs.existsSync("./package.json")) {
+        try {
+            var file = JSON.parse(fs.readFileSync("./package.json").toString())
+            if (file.version) {
+                return file.version + " "
+            } else {
+                return ""
+            }
+        } catch(e) {return""}
+    } else {
+
+        return ""
+    }
+}
 
 async function procDetect() {
     console.log("[Detect:Proc] Detecting Roblox with process method")
@@ -73,6 +108,7 @@ async function detectGame() {
     }
 }
 
+
 async function getGameFromCache(gameid) {
     if (cache[gameid]) {return cache[gameid]}
     try {
@@ -91,27 +127,35 @@ async function getGameFromCache(gameid) {
         return {
             name:"(unknown)",
             by: "(unknown)",
-            iconkey: "unknown"
+            iconkey: defaultIconKey
         }
     }
 }
 var timeout = 15000
 var lastPresense = false
+var enabled = true
 async function doTheThing() {
     console.log("Updating presense")
     var playing = await detectGame()
-    if (playing == false) {
+    if (playing == false || !enabled) {
         if (lastPresense != false) {
             rpc.clearActivity()
         } else {
             timeout = 1000
         }
-        console.log("Not playing anything. Open Roblox and try it out!") 
+        tray.setTitle("")
+        if (enabled) {
+            console.log("Not playing anything. Open Roblox and try it out!") 
+        } else {
+            console.log("rblxRP disabled.")
+        }
+        
         lastPresense = false
         return 
     }
     var game = await getGameFromCache(playing)
     console.log("Playing",game.name, "by",game.by)
+    tray.setTitle(game.name, "by",game.by)
     if (lastPresense != game) {
         rpc.setActivity({
             details:game.name,
@@ -139,27 +183,76 @@ async function interval() {
     setTimeout(interval,timeout)
 }
 rpc.on("ready",async function() {
+    new Notification({
+        title: "rblxRP is ready!",
+        body: "Hi there, " + rpc.user.username + "!",
+        silent:true
+    }).show()
     console.log("Connected to Discord")
+    contextMenu = Menu.buildFromTemplate([
+        { label: "Enable", type: 'checkbox',checked:enabled,click: function() {
+            console.log("Toggling enabled")
+            enabled = !enabled
+            contextMenu.items[0].checked = enabled
+        } },
+        {
+            label: "Default game icon",
+            type: "submenu",
+            submenu: [
+                { label: "Shiny", id: "logo_shiny", type: "radio", checked:true,click:menu},
+                { label: "Red", id:"logo_red", type: "radio",click:menu},
+                { label: "Old 'R' Logo", id:"logo_old", type: "radio",click:menu},
+            ]
+        },
+        { label: 'Quit',click: exit},
+        {type:"separator"},
+        { label: 'rblxRP ' + getVersion() + "by theLMGN",enabled:false},
+        { label: 'GitHub',click: function() {
+
+        }},
+      ])
+    tray.setContextMenu(contextMenu)
+    tray.setToolTip('rblxRP')
+    tray.setTitle("")
     interval()
 })
+
 async function go() {
     try {
+        tray = new Tray('ico/logo_white.png')
+        contextMenu = Menu.buildFromTemplate([
+          { label: 'Quit', click: exit }
+        ])
+        tray.setToolTip('rblxRP')
+        tray.setContextMenu(contextMenu)
+
         console.log("Downloading configuration...")
+        tray.setTitle("Downloading config...")
         var req = await fetch("https://gist.githubusercontent.com/theLMGN/3799b5cb7b0328be7a13860e46832b0e/raw/9f73d30f4e6369ef976234eb99ed8207363d24ea/rblxrp_config.json")
         if (!req.ok) {throw new Error("not ok!")}
         var j = await req.json()
         cache = j.games
         console.log("Downloaded configuration!")
 
-        console.log("Connecting to Discord!")
-
+        console.log("Connecting to Discord...")
+        tray.setTitle("Connecting to Discord...")
         rpc.login({clientId}).catch(function(e) {
             console.error("Failed to connect to Discord... ",e, "Will try again in 15 seconds")
+            new Notification({
+                title: "rblxRP failed to connect to Discord",
+                body: "Will try again in 15 seconds",
+                silent:true
+            }).show()
             setTimeout(go,15000)
         })        
     } catch(e) {
         console.error(e, ". Trying again in 15 seconds")
+        new Notification({
+            title: "rblxRP failed to load",
+            body: "Will try again in 15 seconds",
+            silent:true
+        }).show()
         setTimeout(go,15000)
     }
 }
-go()
+app.on('ready', go)
