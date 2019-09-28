@@ -7,6 +7,10 @@ Adds Discord rich presence for Roblox.
 
 ## Instructions
 
+### Unofficial Installer (Windows)
+
+See https://github.com/SamsonCoder/rblxRPsetup
+
 ### Easy setup
 
 #### Windows
