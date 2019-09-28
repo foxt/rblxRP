@@ -219,7 +219,16 @@ rpc.on("ready",async function() {
 
 async function go() {
     try {
-        tray = new Tray('ico/logo_white.png')
+        try {
+            app.dock.hide()
+        } catch(e) {}
+        var logo ="ico/logo_white.png"
+        if (os.platform() == "win32") { logo = "ico/logo.ico" }
+        try {
+            tray = new Tray(logo)
+        } catch(e) {
+            tray = new Tray(app.getAppPath() + '/' + logo)
+        }
         contextMenu = Menu.buildFromTemplate([
           { label: 'Quit', click: exit }
         ])
