@@ -1,4 +1,5 @@
 const ps = require("ps-node");
+const activeWindow = require("active-window")
 
 module.exports.getProcesses = function(args) {
     return new Promise(function(a,r) {
@@ -17,3 +18,8 @@ module.exports.getScriptUrl = function(arguments) {
     }
     return false
 } 
+module.exports.getActiveWindow = function() {
+    return new Promise(function(a,r) {
+        activeWindow.getActiveWindow(a,0,0)
+    })
+}

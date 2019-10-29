@@ -1,6 +1,6 @@
 {
   "name": "rblxrp",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "description": " Discord Rich Presense for Roblox",
   "main": "index.js",
   "scripts": {
@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/theLMGN/rblxRP#readme",
   "dependencies": {
+    "active-window": "^0.1.0",
     "discord-rpc": "^3.1.0",
     "electron": "^6.0.10",
     "node-fetch": "^2.6.0",

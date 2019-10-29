@@ -6,7 +6,27 @@ const os = require("os")
 const fs = require("fs")
 
 const clientId = '626092891667824688';
-var defaultIconKey = "logo_shiny" // logo_old, logo_red, logo_shiny
+
+console.log("Loading config...")
+const configFile = require("path").join(os.homedir(), "rblxrp_config.json");
+var configCorrupt = false
+var configJSON = {
+    defaultIconKey: "logo_shiny", // logo_old, logo_red, logo_shiny
+    enabled: true,
+    studioEnabled: true,
+}
+if (fs.existsSync(configFile)) {
+    try {
+        var contents = fs.readFileSync(configFile)
+        configJSON = JSON.parse(contents)
+        console.log(configJSON)
+    } catch(e) {
+        configCorrupt = e.message
+    }
+}
+function saveConfig() {
+    fs.writeFileSync(configFile,JSON.stringify(configJSON))
+}
 
 const rpc = new RPC.Client({ transport: 'ipc' });
 var tray,contextMenu
@@ -20,13 +40,14 @@ async function exit() {
 
 async function menu(item) {
     item.checked = true
-    defaultIconKey = item.id
+    configJSON.defaultIconKey = item.id
     for (var i in cache) {
         if (cache[i].iconkey == "logo_shiny" ||cache[i].iconkey == "logo_red" ||cache[i].iconkey == "logo_old") {
-            cache[i].iconkey = defaultIconKey
+            cache[i].iconkey = configJSON.defaultIconKey
         }
     }
     lastPresense = false // force presense update
+    saveConfig()
 }
 
 function getVersion() {
@@ -118,7 +139,7 @@ async function getGameFromCache(gameid) {
         var obj = {
             name: j.Name,
             by: j.Creator.Name,
-            iconkey: defaultIconKey
+            iconkey: configJSON.defaultIconKey
         }
         cache[gameid] = obj
         return obj
@@ -127,24 +148,60 @@ async function getGameFromCache(gameid) {
         return {
             name:"(unknown)",
             by: "(unknown)",
-            iconkey: defaultIconKey
+            iconkey: configJSON.defaultIconKey
         }
     }
 }
 var timeout = 15000
 var lastPresense = false
-var enabled = true
 async function doTheThing() {
+    if (configJSON.studioEnabled) {
+        console.log("Checking for Studio")
+        var active = await util.getActiveWindow()
+        if (active) {
+            if (active.app == "RobloxStudio") {
+                console.log("Script/Game open in Studio is: ", active.title.split(" - ")[0])
+                tray.setTitle(active.title)
+                if (lastPresense != active.title) {
+                    rpc.setActivity({
+                        details:"Roblox Studio",
+                        state:  active.title.split(" - ")[0],
+                        startTimestamp: 0,
+                        largeImageKey: `rstudio`,
+                        largeImageText: 'remind me to put something here',
+                        smallImageKey: 'rblxrp',
+                        smallImageText: 'https://github.com/thelmgn/rblxrp',
+                        instance: false,
+                    });
+                }  else { timeout = 1000 }
+                lastPresense = active.title
+                return lastPresense
+            } else {
+
+                console.log("RobloxStudio is not the foreground app, it is",active.app)
+            }
+        }
+    }
+
+    if (!configJSON.enabled) {
+        if (lastPresense != false) {
+            rpc.clearActivity()
+        } else {
+            timeout = 1000
+        }
+        lastPresense = false
+        return 
+    }
     console.log("Updating presense")
     var playing = await detectGame()
-    if (playing == false || !enabled) {
+    if (playing == false || !configJSON.enabled) {
         if (lastPresense != false) {
             rpc.clearActivity()
         } else {
             timeout = 1000
         }
         tray.setTitle("")
-        if (enabled) {
+        if (configJSON.enabled) {
             console.log("Not playing anything. Open Roblox and try it out!") 
         } else {
             console.log("rblxRP disabled.")
@@ -190,18 +247,25 @@ rpc.on("ready",async function() {
     }).show()
     console.log("Connected to Discord")
     contextMenu = Menu.buildFromTemplate([
-        { label: "Enable", type: 'checkbox',checked:enabled,click: function() {
+        { label: "Enable", type: 'checkbox',checked:configJSON.enabled,click: function() {
             console.log("Toggling enabled")
-            enabled = !enabled
-            contextMenu.items[0].checked = enabled
+            configJSON.enabled = !configJSON.enabled
+            contextMenu.items[0].checked = configJSON.enabled
+            saveConfig()
+        } },
+        { label: "Studio Enabled", type: 'checkbox',checked:configJSON.studioEnabled,click: function() {
+            console.log("Toggling studioEnabled")
+            configJSON.studioEnabled = !configJSON.studioEnabled
+            contextMenu.items[0].checked = configJSON.studioEnabled
+            saveConfig()
         } },
         {
             label: "Default game icon",
             type: "submenu",
             submenu: [
-                { label: "Shiny", id: "logo_shiny", type: "radio", checked:true,click:menu},
-                { label: "Red", id:"logo_red", type: "radio",click:menu},
-                { label: "Old 'R' Logo", id:"logo_old", type: "radio",click:menu},
+                { label: "Shiny", id: "logo_shiny", type: "radio", checked:configJSON.defaultIconKey == "logo_shiny",click:menu},
+                { label: "Red", id:"logo_red",checked:configJSON.defaultIconKey == "logo_red", type: "radio",click:menu},
+                { label: "Old 'R' Logo", id:"logo_old", checked:configJSON.defaultIconKey == "logo_old", type: "radio",click:menu},
             ]
         },
         { label: 'Quit',click: exit},
