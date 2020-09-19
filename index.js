@@ -162,7 +162,7 @@ async function doTheThing() {
             state:  `by ${game.by}`,
             startTimestamp: 0,
             largeImageKey: game.iconkey,
-            largeImageText: 'remind me to put something here',
+            largeImageText: `rblxRP ${getVersion()}`,
             smallImageKey: 'rblxrp',
             smallImageText: 'https://github.com/thelmgn/rblxrp',
             instance: false,
