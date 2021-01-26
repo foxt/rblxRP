@@ -160,7 +160,7 @@ async function doTheThing() {
         rpc.setActivity({
             details:game.name,
             state:  `by ${game.by}`,
-            startTimestamp: 0,
+            startTimestamp: new Date(),
             largeImageKey: game.iconkey,
             largeImageText: `rblxRP ${getVersion()}`,
             smallImageKey: 'rblxrp',
