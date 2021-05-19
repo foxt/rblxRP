@@ -27,7 +27,7 @@
   "dependencies": {
     "active-window": "^0.1.0",
     "discord-rpc": "^3.1.0",
-    "electron": "^6.1.12",
+    "electron": "^9.4.0",
     "node-fetch": "^2.6.0",
     "ps-node": "^0.1.6"
   }
