@@ -1,6 +1,6 @@
 {
   "name": "rblxrp",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": " Discord Rich Presense for Roblox",
   "main": "index.js",
   "scripts": {
@@ -27,7 +27,7 @@
   "dependencies": {
     "active-window": "^0.1.0",
     "discord-rpc": "^3.1.0",
-    "electron": "^6.0.10",
+    "electron": "^6.1.12",
     "node-fetch": "^2.6.0",
     "ps-node": "^0.1.6"
   }

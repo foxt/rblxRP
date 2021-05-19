@@ -25,3 +25,17 @@ Adds Discord rich presence for Roblox.
 **Failed to connect**
 
 Restart Discord
+
+
+## Development Instructions
+
+First of all, clone the repo, install nodejs, and type `npm i`
+
+### macOS
+
+#### Running
+`./node_modules/electron/dist/Electron.app/Contents/MacOS/Electron .`
+
+#### Building
+
+`bash build-macos.sh`
