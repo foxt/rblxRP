@@ -1,34 +1,41 @@
 {
   "name": "rblxrp",
-  "version": "2.3.0",
-  "description": " Discord Rich Presense for Roblox",
-  "main": "index.js",
+  "version": "3.0.0",
+  "description": " Discord Rich Presence for Roblox",
+  "main": "build/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "run": " ./node_modules/@nodegui/qode/binaries/qode ."
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/theLMGN/rblxRP.git"
+    "url": "git+https://github.com/tayi-or/rblxRP.git"
   },
   "keywords": [
     "roblox",
     "discord",
-    "rich_presense",
+    "rich_presence",
     "discord.js",
-    "richpresense",
+    "richpresence",
     "rblx"
   ],
-  "author": "theLMGN",
+  "author": "Taylor Robinson & theLMGN",
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/theLMGN/rblxRP/issues"
+    "url": "https://github.com/tayi-or/rblxRP/issues"
   },
-  "homepage": "https://github.com/theLMGN/rblxRP#readme",
+  "homepage": "https://github.com/tayi-or/rblxRP#readme",
   "dependencies": {
-    "active-window": "^0.1.0",
-    "discord-rpc": "^3.1.0",
-    "electron": "^6.1.12",
-    "node-fetch": "^2.6.0",
+    "@nodegui/nodegui": "^0.35.0",
+    "@nodegui/react-nodegui": "^0.12.0",
+    "@types/discord-rpc": "^4.0.0",
+    "@types/node": "^10.17.60",
+    "@types/node-fetch": "^2.5.12",
+    "@types/node-notifier": "^8.0.1",
+    "@typescript-eslint/eslint-plugin": "^4.29.1",
+    "@typescript-eslint/parser": "^4.29.1",
+    "discord-rpc": "^3.2.0",
+    "node-fetch": "^2.6.1",
+    "node-notifier": "^10.0.0",
     "ps-node": "^0.1.6"
   }
 }

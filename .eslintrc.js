@@ -1,10 +1,15 @@
 module.exports = {
+    parser: "@typescript-eslint/parser",
+
     env: {
         browser: true,
         es2021: true,
         node: true
     },
-    extends: "eslint:recommended",
+    extends: [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended"
+    ],
     parserOptions: {
         ecmaVersion: 12,
         sourceType: "module"
@@ -29,7 +34,6 @@ module.exports = {
         "no-var": ["warn"],
         "require-atomic-updates": 0,
         "no-compare-neg-zero": "error",
-        "no-extra-parens": ["warn", "all", { nestedBinaryExpressions: false }],
         "no-template-curly-in-string": "error",
         "no-unsafe-negation": "error",
         "accessor-pairs": "warn",
@@ -88,6 +92,7 @@ module.exports = {
         "new-cap": "off",
         "newline-per-chained-call": ["error", { ignoreChainWithDepth: 3 }],
         "no-array-constructor": "error",
+        "no-async-promise-executor": "off",
         "no-lonely-if": "error",
         "no-mixed-operators": "error",
         "no-new-object": "error",
