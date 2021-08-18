@@ -4,7 +4,7 @@
   "description": " Discord Rich Presence for Roblox",
   "main": "build/index.js",
   "scripts": {
-    "run": " ./node_modules/@nodegui/qode/binaries/qode ."
+    "run": "qode ."
   },
   "repository": {
     "type": "git",
@@ -36,6 +36,7 @@
     "discord-rpc": "^3.2.0",
     "node-fetch": "^2.6.1",
     "node-notifier": "^10.0.0",
-    "ps-node": "^0.1.6"
+    "ps-node": "^0.1.6",
+    "react": "^17.0.2"
   }
 }

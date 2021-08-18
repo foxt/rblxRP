@@ -1,4 +1,4 @@
-import { spawnSync } from "child_process";
+import { spawnSync,execSync } from "child_process";
 
 // ps-node could be used here, but it's slow on Windows & unreliable on macOS ¯\_(ツ)_/¯
 const getScriptUrlUNIX = () => spawnSync("ps", ["exo", "pid,args"]).stdout
@@ -19,7 +19,7 @@ const getScriptUrlUNIX = () => spawnSync("ps", ["exo", "pid,args"]).stdout
     // return as js object
     .map((e) => e.join(" ").split("-scriptURL ")[1].split(" ")[0])[0];
 
-const getScriptUrlWin = () => spawnSync("wmic process where \"Name='RobloxPlayerBeta.exe'\" get CommandLine /format:csv")
+const getScriptUrlWin = () => execSync("C:\\Windows\\System32\\wbem\\wmic.exe process where \"Name='RobloxPlayerBeta.exe'\" get CommandLine /format:csv")
     .toString().replace("-j ", "-scriptURL ")
     // split each individual process
     .split("\n")

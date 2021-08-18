@@ -9,13 +9,11 @@ import { RNCheckBox } from "@nodegui/react-nodegui/dist/components/CheckBox/RNCh
 import config from "./config";
 
 const tray = new QSystemTrayIcon();
-console.log(resolve(__dirname, "../ico/logo_white.png"));
-const icon = new QIcon(resolve(__dirname, "../ico/logo_white.png"));
+const icon = new QIcon(resolve(__dirname, process.platform == "darwin" ? "../ico/logo_white.png" : "../ico/logo.png"));
 tray.setIcon(icon);
 tray.setToolTip("rblxRP");
 tray.addEventListener("activated", () => {
     showConfigScreen = !showConfigScreen;
-    console.log(setState);
     setState();
 });
 tray.show();
@@ -44,7 +42,6 @@ Connected to Discord as abcdefghijklmnopqrstuv#0000
         setState = (() => this.setState({ })).bind(this);
         this.iconRef.current.setCurrentIndex(icons.indexOf(config.defaultIcon));
         setInterval((() => {
-            console.log(config);
             this.iconRef.current.setCurrentIndex(icons.indexOf(config.defaultIcon));
             this.cloudProvidedRef.current.setChecked(stateManager.connectToRemote);
         }).bind(this), 100);
@@ -69,11 +66,11 @@ ${discord.user ? "Connected to Discord as " + discord.user.username + "#" + disc
 
     render() {
         return (
-            <Window visible={showConfigScreen} windowFlags={{ [WindowType.WindowStaysOnTopHint]: true }} >
+            <Window minSize={{width:404,height:213}} maxSize={{width:404,height:213}} windowTitle="rblxRP Settings" windowIcon={icon} visible={showConfigScreen} windowFlags={{ [WindowType.WindowStaysOnTopHint]: true }} >
                 <View>
                     {/* Header */}
                     <View style="flex-direction: row;justify-content: 'center'">
-                        <Image style="flex: 1;height: 48px;width: 48px;flex-grow:0;" src={resolve(__dirname, "../ico/logo.png")}></Image>
+                        <Image style="flex: 1;height: 48px;width: 48px;flex-grow:0;" src={ resolve(__dirname, "..","ico","logo.png")}></Image>
                         <Text style="font-size: 36px;font-weight: 900;">rblxRP</Text>
                     </View>
 
