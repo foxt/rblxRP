@@ -11,7 +11,7 @@
     <key>CFBundleSignature</key>
     <string>????</string>
     <key>CFBundleIconFile</key>
-	  <string>ico/logo.icns</string>
+	  <string>dist/ico/logo.icns</string>
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>
