@@ -8,6 +8,8 @@ import { RNComboBox } from "@nodegui/react-nodegui/dist/components/ComboBox/RNCo
 import { RNCheckBox } from "@nodegui/react-nodegui/dist/components/CheckBox/RNCheckBox";
 import config from "./config";
 
+process.env["EZP-DEBUG"] = 'true'
+
 const tray = new QSystemTrayIcon();
 const icon = new QIcon(resolve(__dirname, process.platform == "darwin" ? "../ico/logo_white.png" : "../ico/logo.png"));
 tray.setIcon(icon);
@@ -58,15 +60,15 @@ Connected to Discord as abcdefghijklmnopqrstuv#0000
                 status = "Error: " + e.message;
             }
             this.statusText = (`Current state: ${status}
-${discord.user ? "Connected to Discord as " + discord.user.username + "#" + discord.user.discriminator : "Not connected to Discord."}`);
+${discord.environment ? "Connected to Discord as " + discord.environment.user.username + "#" + discord.environment.user.discriminator : "Not connected to Discord."}`);
             this.setState({});
         });
-        discord.on("ready", setState);
+        discord.on("connected", setState);
     }
 
     render() {
         return (
-            <Window minSize={{width:404,height:213}} maxSize={{width:404,height:213}} windowTitle="rblxRP Settings" windowIcon={icon} visible={showConfigScreen} windowFlags={{ [WindowType.WindowStaysOnTopHint]: true }} >
+            <Window minSize={{width:404,height:300}} maxSize={{width:404,height:300}} windowTitle="rblxRP Settings" windowIcon={icon} visible={showConfigScreen} windowFlags={{ [WindowType.WindowStaysOnTopHint]: true }} >
                 <View>
                     {/* Header */}
                     <View style="flex-direction: row;justify-content: 'center'">

@@ -4,11 +4,12 @@
   "description": " Discord Rich Presence for Roblox",
   "main": "build/index.js",
   "scripts": {
-    "run": "qode ."
+    "run": "qode .",
+    "which": "which qode"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tayi-or/rblxRP.git"
+    "url": "git+https://github.com/rblxRP/rblxRP.git"
   },
   "keywords": [
     "roblox",
@@ -18,25 +19,26 @@
     "richpresence",
     "rblx"
   ],
-  "author": "Taylor Robinson & theLMGN",
+  "author": "theLMGN & Taylor Robinson",
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/tayi-or/rblxRP/issues"
+    "url": "https://github.com/rblxRP/rblxRP/issues"
   },
-  "homepage": "https://github.com/tayi-or/rblxRP#readme",
+  "homepage": "https://github.com/rblxRP/rblxRP#readme",
   "dependencies": {
     "@nodegui/nodegui": "^0.35.0",
+    "@nodegui/qode": "^16.4.0",
     "@nodegui/react-nodegui": "^0.12.0",
-    "@types/discord-rpc": "^4.0.0",
+    "easy-presence": "^1.0.0-fix1",
+    "node-fetch": "^2.6.1",
+    "node-notifier": "^10.0.0",
+    "react": "^17.0.2"
+  },
+  "devDependencies": {
     "@types/node": "^10.17.60",
     "@types/node-fetch": "^2.5.12",
     "@types/node-notifier": "^8.0.1",
     "@typescript-eslint/eslint-plugin": "^4.29.1",
-    "@typescript-eslint/parser": "^4.29.1",
-    "discord-rpc": "^3.2.0",
-    "node-fetch": "^2.6.1",
-    "node-notifier": "^10.0.0",
-    "ps-node": "^0.1.6",
-    "react": "^17.0.2"
+    "@typescript-eslint/parser": "^4.29.1"
   }
 }

@@ -1,64 +1,43 @@
-import { Client } from "discord-rpc";
+import { EasyPresence } from "../../../easy-presence";
 import config from "./config";
 import { GameInfo } from "./state/providers/gameInfo";
 import stateManager, { rblxrpGameState, rblxrpState } from "./state/stateManager";
 
 
-class DiscordRpcManager extends Client {
-    cooldown = false;
-    queuedActivity = false;
+class DiscordRpcManager extends EasyPresence {
     constructor() {
-        super({ transport: "ipc" });
-        this.login({ clientId: "626092891667824688" });
-        this.on("ready", () => {
-            console.log("[DRPC] ", this.user.username, " is ready!");
+        super('626092891667824688');
+        this.on("connected", () => {
+            console.log("[DRPC] ", this.environment.user.username, " is ready!");
         });
         stateManager.on("updateState", this.updateState.bind(this));
     }
     async updateState(state: rblxrpState) {
-        if (this.cooldown) {
-            this.queuedActivity = true;
-            return;
-        }
-        this.cooldown = true;
+        var s = state as rblxrpGameState
+        let info: GameInfo = { name: s.gameId || state.type, by: "A Roblox Developer" };
         try {
-            if (state.type == "game") {
-                await this.activitySet(state as rblxrpGameState);
-            } else {
-                this.clearActivity();
-            }
-        } catch (e) {
-            setTimeout(() => this.updateState(state), 1000);
-        }
-        setTimeout((() => {
-            this.cooldown = false;
-            if (this.queuedActivity) {
-                this.queuedActivity = false;
-                this.updateState(stateManager.state);
-            }
-        }).bind(this), 15000);
-    }
-    async activitySet(state: rblxrpGameState) {
-        let info: GameInfo = { name: state.gameId, by: "A Roblox Developer" };
-        try {
-            info = await state.info;
+            info = await s.info;
         } catch (e) {}
-        this.setActivity({
-            state: state.providedState ? state.providedState.state : "by " + info.by,
+        this.setActivity(state.type == 'game' ? {
+            state: s.providedState ? s.providedState.state : "by " + info.by,
             details: info.name,
-            startTimestamp: Date.now(),
-            largeImageKey: info.iconKey || config.defaultIcon,
-            smallImageKey: "rblxrp",
-            smallImageText: "http://rblxrp.robins.one",
+            timestamps: {
+                start: Date.now(),
+            },
+            assets: {
+                large_image: info.iconKey || config.defaultIcon,
+                small_image: "rblxrp",
+                small_text: "http://rblxrp.app",
+            },
             instance: true,
-            partyId: state.gameId,
+            //party: {id: s.gameId},
             buttons: [
                 {
                     label: "► Play",
-                    url: "https://roblox.com/games/" + state.gameId
+                    url: "https://roblox.com/games/" + s.gameId
                 }
             ]
-        });
+        } : undefined);
     }
 }
 
