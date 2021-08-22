@@ -5,13 +5,13 @@
     <key>CFBundleDevelopmentRegion</key>
     <string>en</string>
     <key>CFBundleExecutable</key>
-    <string>qode</string>
+    <string>qode.sh</string>
     <key>CFBundleIdentifier</key>
-    <string>one.robins.rblxrp</string>
+    <string>rocks.rblxrp</string>
     <key>CFBundleSignature</key>
     <string>????</string>
     <key>CFBundleIconFile</key>
-	  <string>dist/ico/logo.icns</string>
+	  <string>ico/logo.icns</string>
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>
@@ -33,6 +33,6 @@
     <key>NSHighResolutionCapable</key>
     <string>True</string>
     <key>LSUIElement</key>
-    <string>True</string>
+    </true>
   </dict>
 </plist>
