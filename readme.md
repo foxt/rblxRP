@@ -1,6 +1,6 @@
 # rblxRP 3.0
 Adds Discord rich presence for Roblox.
 
-[Join my Discord server](https://discord.gg/4qzqg3k)
+[Join the Discord server](https://discord.gg/5aQSDGCTX6)
 
-todo
+3.0 docs todo
