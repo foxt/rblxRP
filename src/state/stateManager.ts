@@ -1,3 +1,4 @@
+import { info } from "console";
 import EventEmitter from "events";
 import { notify } from "node-notifier";
 import { join } from "path";
@@ -56,8 +57,13 @@ class StateManager extends EventEmitter {
         try {
             console.log("[Stat] Detecting Roblox...");
             const gameId = getRunningGameId();
-
-            if (gameId && !(this.state.type == "game" && (this.state as rblxrpGameState).gameId == gameId)) { return this.emit("updateState", { gameId, info: getGameInfo(gameId), type: "game", creationTime: new Date() } as rblxrpGameState); }
+            if (gameId && !(this.state.type == "game" && (this.state as rblxrpGameState).gameId == gameId)) { 
+                const state = { gameId, info: getGameInfo(gameId), type: "game", creationTime: new Date() } as rblxrpGameState;
+                setTimeout(async () => {
+                    try { state.info = await state.info } catch(e) { console.error("[Stat]",e)}
+                },1)
+                return this.emit("updateState", state); 
+            }
             if (!gameId && this.state.type != "none") return this.emit("updateState", { type: "none" } as rblxrpNoneState);
 
             return undefined;

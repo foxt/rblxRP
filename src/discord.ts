@@ -27,7 +27,7 @@ class DiscordRpcManager extends EasyPresence {
             assets: {
                 large_image: info.iconKey || config.defaultIcon,
                 small_image: "rblxrp",
-                small_text: "http://rblxrp.rocks",
+                small_text: "http://rblxrp.xyz",
             },
             instance: true,
             //party: {id: s.gameId},
