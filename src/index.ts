@@ -7,8 +7,9 @@ import {spawn} from "child_process";
 import WebSocket from "ws";
 import {URL} from "url";
 import {notify} from "node-notifier";
-import {join} from "path";
+import {dirname, join} from "path";
 import fetch from "node-fetch";
+import { existsSync, fstat } from "fs";
 
 process.env["EZP-DEBUG"] = 'true'
 
@@ -78,14 +79,18 @@ stateManager.on("updateState", wsBroadcast);;
         var releasesJ = await releasesF.json();
         var first = releasesJ[0];
         if (first.tag_name != require("../package.json").version) {
-            //firstItem = "Update rblxRP";
+            firstItem = "Update rblxRP";
         }
 
     } catch (e) {
         console.error("[Updt]", e)
     }
-
+    var traybinPath;
+    var deploypath = dirname(process.execPath)
+    if (existsSync(join(deploypath, "notifier"))) traybinPath = join(deploypath, "notifier");
+    console.log("tbp",traybinPath,deploypath)
     const tray = new SysTray({
+        traybinPath,
         menu: {
             icon,
             title: "",

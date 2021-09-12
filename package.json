@@ -2,9 +2,10 @@
   "name": "rblxrp",
   "version": "3.0.0",
   "description": " Discord Rich Presence for Roblox",
-  "main": "dist/index.js",
+  "main": "build/index.js",
+  "bin": "build/index.js",
   "scripts": {
-    "build::macos": "bash build_macos.sh; open deploy/darwin/build/rblxRP.app"
+    "build": "bash build.sh"
   },
   "repository": {
     "type": "git",
@@ -40,7 +41,7 @@
     "easy-presence": "^1.0.0-fix1",
     "node-fetch": "^2.6.1",
     "node-notifier": "^10.0.0",
-    "systray": "^1.0.5",
+    "systray": "github:rblxRP/node-systray",
     "ws": "^8.2.2"
   },
   "devDependencies": {
@@ -49,6 +50,16 @@
     "@types/node-notifier": "^8.0.1",
     "@typescript-eslint/eslint-plugin": "^4.29.1",
     "@typescript-eslint/parser": "^4.29.1",
+    "pkg": "^5.3.2",
     "typescript": "^4.3.5"
+  },
+  "pkg": {
+    "scripts": "build/**/*.js",
+    "assets": "ico/**/*",
+    "targets": [
+      "latest-win-x64",
+      "latest-macos-x64"
+    ],
+    "outputPath": "deploy"
   }
 }
