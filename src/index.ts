@@ -10,6 +10,7 @@ import {notify} from "node-notifier";
 import {dirname, join} from "path";
 import fetch from "node-fetch";
 import { existsSync, fstat } from "fs";
+import { server } from "./webserver";
 
 process.env["EZP-DEBUG"] = 'true'
 
@@ -24,22 +25,15 @@ function openURL(url) {
 }
 
 function openConfig() {
-    if (global["wss"]) global["wss"].close();
-    const wss = new WebSocket.Server({
-        port: 5816,
-        host: "127.0.0.1"
-    });
-    global["wss"] = wss;
-    console.log("listening");
-    wss.on("connection", (conn, req) => {
-        console.log("incoming", req.headers.origin);
-        if (new URL(req.headers.origin).host !== "rblxrp.xyz") return conn.close();
-        if (wss.clients.size > 1) return conn.close();
-        conn.on("close", () => wss.close())
+    server.ws.on("connection", (conn, req) => {
+        console.log("[WbSk] incoming", req.headers.origin);
+        //if (new URL(req.headers.origin).host !== "rblxrp.xyz") return conn.close();
         conn.on("message", (msg) => {
             var j = JSON.parse(msg.toString());
             for (var k in j)
                 if (typeof config[k] == typeof j[k]) config[k] = j[k];
+            console.log("[WbSk] ", config);
+            config.save();
             wsBroadcast();
         });
         notify({
@@ -56,8 +50,7 @@ function openConfig() {
 }
 
 function wsBroadcast() {
-    if (!global["wss"]) return;
-    for (var client of global["wss"].clients) setTimeout(() => client.send(JSON.stringify({
+    for (var client of server.ws.clients) setTimeout(() => client.send(JSON.stringify({
         state: stateManager.state,
         config: config,
         discord: {
