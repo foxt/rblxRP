@@ -26,12 +26,17 @@ function openURL(url) {
 }
 
 function updateStudioPlugin() {
-    if (config.studioPresence) {
-        if (!existsSync(join(homedir(),"Documents","Roblox"))) mkdirSync(join(homedir(),"Documents","Roblox"));
-        if (!existsSync(join(homedir(),"Documents","Roblox","Plugins"))) mkdirSync(join(homedir(),"Documents","Roblox","Plugins"));
-        writeFileSync(join(homedir(),"Documents","Roblox","Plugins","rblxRPPlugin.lua"), `local a="http://127.0.0.1:5816/"local b=game:GetService("StudioService")local c=game:GetService("ServerStorage")local d=game:GetService("HttpService")local e=game:GetService("Selection")local f=""local g=false;function debugLog(h)if c:FindFirstChild("rblxrpdebug")then print("[rblxRP] "..h)end end;while wait(5)do local i,j=pcall(function()debugLog("pinging..."..a.."pingState")d:PostAsync(a.."pingState","")debugLog("pong")local k=d:UrlEncode(game.GameId or 0)local l=d:UrlEncode(game.Name or"Place1")local m=d:UrlEncode("Working on a game")if b.ActiveScript~=nil then m=d:UrlEncode(b.ActiveScript.Name)end;local n=a.."reportState/"..k.."/"..l.."/"..m;debugLog(n)if n==f and not g then return end;g=true;debugLog("posting..."..n)d:PostAsync(n,"")debugLog("posted state "..n)g=false;f=n end)if not i then debugLog("failed "..j)end end;e.SelectionChanged:Connect(function()if not g then debugLog("forcing next state update")end;g=true end)`)
-    } else {
-        unlinkSync(join(homedir(),"Documents","Roblox","Plugins","rblxRPPlugin.lua"))
+    try {
+        var root = process.platform == "win32" ? 'AppData\\Local' : 'Documents'
+        if (config.studioPresence) {
+            if (!existsSync(join(homedir(),root,"Roblox"))) mkdirSync(join(homedir(),root,"Roblox"));
+            if (!existsSync(join(homedir(),root,"Roblox","Plugins"))) mkdirSync(join(homedir(),root,"Roblox","Plugins"));
+            writeFileSync(join(homedir(),root,"Roblox","Plugins","rblxRPPlugin.lua"), `local a="http://127.0.0.1:5816/"local b=game:GetService("StudioService")local c=game:GetService("ServerStorage")local d=game:GetService("HttpService")local e=game:GetService("Selection")local f=""local g=false;function debugLog(h)if c:FindFirstChild("rblxrpdebug")then print("[rblxRP] "..h)end end;while wait(5)do local i,j=pcall(function()debugLog("pinging..."..a.."pingState")d:PostAsync(a.."pingState","")debugLog("pong")local k=d:UrlEncode(game.GameId or 0)local l=d:UrlEncode(game.Name or"Place1")local m=d:UrlEncode("Working on a game")if b.ActiveScript~=nil then m=d:UrlEncode(b.ActiveScript.Name)end;local n=a.."reportState/"..k.."/"..l.."/"..m;debugLog(n)if n==f and not g then return end;g=true;debugLog("posting..."..n)d:PostAsync(n,"")debugLog("posted state "..n)g=false;f=n end)if not i then debugLog("failed "..j)end end;e.SelectionChanged:Connect(function()if not g then debugLog("forcing next state update")end;g=true end)`)
+        } else {
+            unlinkSync(join(homedir(),root,"Roblox","Plugins","rblxRPPlugin.lua"))
+        }
+    } catch(e) {
+        
     }
 }
 
