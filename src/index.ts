@@ -9,8 +9,9 @@ import {URL} from "url";
 import {notify} from "node-notifier";
 import {dirname, join} from "path";
 import fetch from "node-fetch";
-import { existsSync, fstat } from "fs";
+import { existsSync, fstat, unlinkSync, writeFileSync } from "fs";
 import { server } from "./webserver";
+import { homedir } from "os";
 
 process.env["EZP-DEBUG"] = 'true'
 
@@ -24,6 +25,14 @@ function openURL(url) {
     }
 }
 
+function updateStudioPlugin() {
+    if (config.studioPresence) {
+        writeFileSync(join(homedir(),"Documents","Roblox","Plugins","rblxRPPlugin.lua"), `local a="http://127.0.0.1:5816/"local b=game:GetService("StudioService")local c=game:GetService("ServerStorage")local d=game:GetService("HttpService")local e=game:GetService("Selection")local f=""local g=false;function debugLog(h)if c:FindFirstChild("rblxrpdebug")then print("[rblxRP] "..h)end end;while wait(5)do local i,j=pcall(function()debugLog("pinging..."..a.."pingState")d:PostAsync(a.."pingState","")debugLog("pong")local k=d:UrlEncode(game.GameId or 0)local l=d:UrlEncode(game.Name or"Place1")local m=d:UrlEncode("Working on a game")if b.ActiveScript~=nil then m=d:UrlEncode(b.ActiveScript.Name)end;local n=a.."reportState/"..k.."/"..l.."/"..m;debugLog(n)if n==f and not g then return end;g=true;debugLog("posting..."..n)d:PostAsync(n,"")debugLog("posted state "..n)g=false;f=n end)if not i then debugLog("failed "..j)end end;e.SelectionChanged:Connect(function()if not g then debugLog("forcing next state update")end;g=true end)`)
+    } else {
+        unlinkSync(join(homedir(),"Documents","Roblox","Plugins","rblxRPPlugin.lua"))
+    }
+}
+
 function openConfig() {
     server.ws.on("connection", (conn, req) => {
         console.log("[WbSk] incoming", req.headers.origin);
@@ -32,6 +41,7 @@ function openConfig() {
             var j = JSON.parse(msg.toString());
             for (var k in j)
                 if (typeof config[k] == typeof j[k]) config[k] = j[k];
+            if (j["studioPresnce"]) setTimeout(updateStudioPlugin,50);
             console.log("[WbSk] ", config);
             config.save();
             wsBroadcast();
@@ -119,4 +129,6 @@ stateManager.on("updateState", wsBroadcast);;
 
     // eslint-disable-next-line dot-notation
     global["tray"] = tray; // To prevent win from being garbage collected.
+
+    updateStudioPlugin();
 })()

@@ -1,7 +1,7 @@
 import { EasyPresence } from "easy-presence";
 import config from "./config";
 import { GameInfo } from "./state/providers/gameInfo";
-import stateManager, { rblxrpGameState, rblxrpState, rblxrpStudioState } from "./state/stateManager";
+import stateManager, { rblxrpGameState, rblxrpState, rblxrpStateWithGame, rblxrpStudioState } from "./state/stateManager";
 
 
 class DiscordRpcManager extends EasyPresence {
@@ -16,10 +16,18 @@ class DiscordRpcManager extends EasyPresence {
         var presence = undefined;
         switch (state.type) {
             case "game":
-                const s = state as rblxrpGameState
-                let info: GameInfo = { name: s.gameId || state.type, by: "A Roblox Developer" };
+            case "studio":
+                const s = state as rblxrpStateWithGame
+                let info: GameInfo = { 
+                    name: s.type == "studio" ? 
+                            (!s.providedState.gameName.match(/Place\d+$/) ? s.providedState.gameName : 'Working on a game') : 
+                            "Playing a game", 
+                    by: "a Roblox developer" 
+                };
                 try {
-                    info = await s.info;
+                    const i = await s.info;
+                    console.log(i);
+                    if (i) info = i
                 } catch (e) {}
                 presence =  {
                     state: s.providedState ? s.providedState.state : "by " + info.by,
@@ -28,36 +36,13 @@ class DiscordRpcManager extends EasyPresence {
                         start: Date.now(),
                     },
                     assets: {
-                        large_image: info.iconKey || config.defaultIcon,
+                        large_image: state.type == 'studio' ? 'rstudio' : info.iconKey || config.defaultIcon,
                         small_image: "rblxrp",
                         small_text: "http://rblxrp.xyz",
                     },
                     instance: true,
-                    //party: {id: s.gameId},
-                    buttons: [
-                        {
-                            label: "► Play",
-                            url: "https://roblox.com/games/" + s.gameId
-                        }
-                    ]
-                };
-                break;
-            case "studio":
-                const studiostate = state as rblxrpStudioState
-                presence =  {
-                    state: studiostate.action,
-                    details: studiostate.game,
-                    timestamps: {
-                        start: Date.now(),
-                    },
-                    assets: {
-                        large_image: 'studio',
-                        small_image: "rblxrp",
-                        small_text: "http://rblxrp.xyz",
-                    },
-                    instance: true,
-                    party: {id: s.gameId},
-                    buttons: [
+                    party: {id:  state.type + s.gameId},
+                    buttons: s.gameId == '0' ? undefined : [
                         {
                             label: "► Play",
                             url: "https://roblox.com/games/" + s.gameId
