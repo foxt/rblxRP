@@ -29,3 +29,6 @@ cp ../node_modules/systray/traybin/tray_darwin_release mac/notifier
 cp -r ../rblxRP.app ./
 mv mac/* ./rblxRP.app/Contents/MacOS/
 rm -rf mac 
+
+zip -9r rblxrp-X.X.X-darwin.zip rblxRP.app
+zip -9r rblxrp-X.X.X-win.zip win
