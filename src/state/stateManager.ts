@@ -51,7 +51,6 @@ class StateManager extends EventEmitter {
         server.app.post("/reportState/:id/:name/:action",this.handleStudioState.bind(this));
         server.app.post("/pingState",this.handleStudioPing.bind(this));
         
-        
         this.emit("updateState", { type: "loading", message: "Downloading games list..." } as rblxrpLoadingState);
         fetchRemoteConfig().then(() => {
             this.emit("updateState", { type: "loading", message: "Checking..." } as rblxrpLoadingState);

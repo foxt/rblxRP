@@ -29,15 +29,26 @@ export function getGameInfo(gameId:string):Promise<void | GameInfo> | GameInfo  
             // https://games.roblox.com/v1/games/multiget-place-details?placeIds= requires authentication
             // crying
             const universeId = await getUniverseId(gameId);
-            console.log("[GIP ] ", universeId);
+            console.log("[GIP ]     Universe:", universeId);
 
             const gamesResponse = await fetch("https://games.roblox.com/v1/games?universeIds=" + universeId);
             if (!gamesResponse.ok) return reject(gamesResponse.status + " " + gamesResponse.statusText);
             const gamesJson = await gamesResponse.json();
-            console.log("[GIP ] ",gamesJson,universeId);
             if (!gamesJson.data || !gamesJson.data[0]) return reject("no json.data[0]");
+            console.log("[GIP ]     Game:", gamesJson.data[0].name);
+            console.log ("[GIP ]    Retrieving icon for", universeId);
+            var data:GameInfo = { name: gamesJson.data[0].name, by: gamesJson.data[0].creator.name };
+            try {
+                const iconResponse = await fetch("https://thumbnails.roblox.com/v1/games/icons?universeIds=" + universeId + "&size=512x512&format=Png&isCircular=false");
+                if (!iconResponse.ok) throw iconResponse.status + " " + iconResponse.statusText;
+                const iconJson = await iconResponse.json();
+                if (!iconJson.data || !iconJson.data[0] || !iconJson.data[0].imageUrl) throw "no json.data[0]";
+                data.iconKey = iconJson.data[0].imageUrl;                
+            } catch(e) {
+                console.error("[GIP ]     Error fetching icon:", e);
+            }
+            resolve(data);
 
-            return resolve({ name: gamesJson.data[0].name, by: gamesJson.data[0].creator.name });
         } catch (e) {
             console.error("[GIP ] Failed to get game info", e);
             gameInfoCache.delete(gameId);

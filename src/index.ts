@@ -31,7 +31,7 @@ function updateStudioPlugin() {
         if (config.studioPresence) {
             if (!existsSync(join(homedir(),root,"Roblox"))) mkdirSync(join(homedir(),root,"Roblox"));
             if (!existsSync(join(homedir(),root,"Roblox","Plugins"))) mkdirSync(join(homedir(),root,"Roblox","Plugins"));
-            writeFileSync(join(homedir(),root,"Roblox","Plugins","rblxRPPlugin.lua"), `local a="http://127.0.0.1:5816/"local b=game:GetService("StudioService")local c=game:GetService("ServerStorage")local d=game:GetService("HttpService")local e=game:GetService("Selection")local f=""local g=false;function debugLog(h)if c:FindFirstChild("rblxrpdebug")then print("[rblxRP] "..h)end end;while wait(5)do local i,j=pcall(function()debugLog("pinging..."..a.."pingState")d:PostAsync(a.."pingState","")debugLog("pong")local k=d:UrlEncode(game.GameId or 0)local l=d:UrlEncode(game.Name or"Place1")local m=d:UrlEncode("Working on a game")if b.ActiveScript~=nil then m=d:UrlEncode(b.ActiveScript.Name)end;local n=a.."reportState/"..k.."/"..l.."/"..m;debugLog(n)if n==f and not g then return end;g=true;debugLog("posting..."..n)d:PostAsync(n,"")debugLog("posted state "..n)g=false;f=n end)if not i then debugLog("failed "..j)end end;e.SelectionChanged:Connect(function()if not g then debugLog("forcing next state update")end;g=true end)`)
+            writeFileSync(join(homedir(),root,"Roblox","Plugins","rblxRPPlugin.lua"), `local a="http://127.0.0.1:5816/"local b=game:GetService("StudioService")local c=game:GetService("ServerStorage")local d=game:GetService("HttpService")local e=game:GetService("Selection")local f=""local g=false;function debugLog(h)if c:FindFirstChild("rblxrpdebug")then print("[rblxRP] "..h)end end;while wait(5)do local i,j=pcall(function()debugLog("pinging..."..a.."pingState")d:PostAsync(a.."pingState","")debugLog("pong")local k=d:UrlEncode(game.PlaceId or 0)local l=d:UrlEncode(game.Name or"Place1")local m=d:UrlEncode("Working on a game")if b.ActiveScript~=nil then m=d:UrlEncode(b.ActiveScript.Name)end;local n=a.."reportState/"..k.."/"..l.."/"..m;debugLog(n)if n==f and not g then return end;g=true;debugLog("posting..."..n)d:PostAsync(n,"")debugLog("posted state "..n)g=false;f=n end)if not i then debugLog("failed "..j)end end;e.SelectionChanged:Connect(function()if not g then debugLog("forcing next state update")end;g=true end)`)
         } else {
             unlinkSync(join(homedir(),root,"Roblox","Plugins","rblxRPPlugin.lua"))
         }
@@ -132,7 +132,17 @@ stateManager.on("updateState", wsBroadcast);;
                 tray.kill();
                 process.exit();
         }
-    })
+    }) 
+    if (firstItem == "Update rblxRP")
+        notify({
+            title: "Update rblxRP",
+            message: "There is a new version of rblxRP available.",
+            icon: join(__dirname, "..", "ico", "logo.png"),
+            contentImage: join(__dirname, "..", "ico", "logo.png")
+        }, (_e,r,_m) => {
+            if (r == "activate") openURL("http://rblxrp.xyz");
+
+        })
 
     // eslint-disable-next-line dot-notation
     global["tray"] = tray; // To prevent win from being garbage collected.
