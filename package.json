@@ -41,7 +41,7 @@
     "@types/ws": "^7.4.7",
     "easy-presence": "^1.2.0-oops1",
     "express": "^4.17.1",
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^3.2.10",
     "node-notifier": "^10.0.0",
     "systray": "github:rblxRP/node-systray",
     "ws": "^8.2.2"
